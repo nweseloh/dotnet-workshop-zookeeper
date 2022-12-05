@@ -5,7 +5,19 @@ namespace Zookeeper.Models;
 
 public class Lion : IAnimal
 {
-    public int Age { get; set; }
+    private int _age;
+
+    public int Age
+    {
+        get => _age;
+        set
+        {
+            if (value < 0)
+                throw new ArgumentOutOfRangeException(nameof(value));
+
+            _age = value;
+        }
+    }
 
     public string Name { get; set; }
 

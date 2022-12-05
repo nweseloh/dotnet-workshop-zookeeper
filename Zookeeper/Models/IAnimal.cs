@@ -1,5 +1,4 @@
-﻿
-using Zookeeper.Enums;
+﻿using Zookeeper.Enums;
 
 namespace Zookeeper.Models;
 
