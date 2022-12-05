@@ -1,4 +1,5 @@
 ﻿
+using System;
 using Zookeeper.Enums;
 
 namespace Zookeeper.Models;
@@ -13,7 +14,9 @@ public class Lion : IAnimal
         set
         {
             if (value < 0)
+            {
                 throw new ArgumentOutOfRangeException(nameof(value));
+            }
 
             _age = value;
         }
@@ -22,6 +25,7 @@ public class Lion : IAnimal
     public string Name { get; set; }
 
     public Size Size => Size.Medium;
+
     public bool IsDangerous()
     {
         return true;
