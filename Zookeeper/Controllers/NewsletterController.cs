@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System.Data;
+﻿using System;
+using System.Net.Mail;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using Zookeeper.Exceptions;
 using Zookeeper.Tools;
 
 namespace Zookeeper.Controllers;
@@ -9,14 +12,32 @@ namespace Zookeeper.Controllers;
 public class NewsletterController
 {
     private readonly IEmailService _emailService;
-    public NewsletterController(IEmailService emailService)
+    private readonly IMyLogger _logger;
+
+    public NewsletterController(IEmailService emailService, IMyLogger  logger)
     {
         _emailService = emailService;
+        _logger = logger;
     }
 
     [HttpGet(nameof(Subscribe))]
     public void Subscribe(string emailAddress)
     {
-        _emailService.SendMail(emailAddress);
+        if (!_emailService.IsValidEmailAddress(emailAddress))
+            throw new InvalidEmailException();
+
+        try
+        {
+            _emailService.SendMail(emailAddress);
+        }
+        catch (SmtpException e)
+        {
+            _logger.Log(e, "Send mail failed");
+        }
     }
+}
+
+public interface IMyLogger
+{
+    void Log(Exception smtpException, string message);
 }

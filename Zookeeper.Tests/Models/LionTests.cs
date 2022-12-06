@@ -15,7 +15,7 @@ namespace Zookeeper.Tests.Models
         [SetUp]
         public void SetUp()
         {
-            _lion = new Lion();
+            _lion = new OldLion();
         }
 
         [Test]

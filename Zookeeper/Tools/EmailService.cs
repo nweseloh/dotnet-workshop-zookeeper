@@ -17,13 +17,8 @@ public class EmailService : IEmailService
         return new SmtpClient("127.0.0.1", 125);
     }
 
-    public static bool IsValidEmailAddress(string emailAddress)
+    public bool IsValidEmailAddress(string emailAddress)
     {
         return emailAddress.Contains("@");
     }
-}
-
-public interface IEmailService
-{
-    void SendMail(string recipient);
 }
