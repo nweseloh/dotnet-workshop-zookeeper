@@ -7,6 +7,7 @@ namespace Zookeeper.Models;
 public class Lion : IAnimal
 {
     private int _age;
+    private bool _isHungry;
 
     public int Age
     {
@@ -26,8 +27,18 @@ public class Lion : IAnimal
 
     public Size Size => Size.Medium;
 
-    public bool IsDangerous()
+    public virtual bool IsDangerous()
     {
-        return true;
+        return _isHungry;
+    }
+
+    public string Roar()
+    {
+        return "Roaaaarrrrrrr!";
+    }
+
+    public void Feed()
+    {
+        // do nothing
     }
 }

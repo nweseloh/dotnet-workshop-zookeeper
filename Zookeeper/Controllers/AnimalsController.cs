@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Zookeeper.Enums;
 using Zookeeper.Models;
+using Zookeeper.Repositories;
 
 namespace Zookeeper.Controllers;
 
@@ -13,17 +14,7 @@ public class AnimalsController : ControllerBase
 {
     private static IEnumerable<IAnimal> GetAllAnimals()
     {
-        return new List<IAnimal>
-        {
-            new Lion { Age = 1, Name = "Simba" },
-            new Lion { Age = 10, Name = "Mufasa" },
-            new Lion { Age = 20, Name = "Scar"},
-            new Giraffe { Age = 1, Name = "Shorty"},
-            new Giraffe { Age = 7, Name = "Lady Long Leg"},
-            new Giraffe { Age = 10, Name = "Mister Long Neck"},
-            new Tortoise{ Age = 50, Name = "Young Boy Johnny"},
-            new Tortoise{ Age = 120, Name = "Grandma Georgia"}
-        };
+        return AnimalRepository.GetAllAnimals();
     }
 
 
@@ -66,13 +57,32 @@ public class AnimalsController : ControllerBase
     [HttpGet(nameof(GetAnimalsOrderedByName))]
     public IEnumerable<string> GetAnimalsOrderedByName(int offset, int limit)
     {
-        return GetAllAnimals().OrderBy(x => x.Name).Skip(offset).Take(limit).Select(x => x.Name);
+        IEnumerable<string> animalNames = GetAnimalNames(offset, limit);
+
+        Console.WriteLine($"We found {animalNames.Count()} animals");
+
+        return animalNames;
     }
+
+    private static List<string> GetAnimalNames(int offset, int limit)
+    {
+        IEnumerable<IAnimal> animals = GetAllAnimals();
+
+        IOrderedEnumerable<IAnimal> orderedAnimals = animals.OrderBy(x => x.Name);
+
+        IEnumerable<IAnimal> selectedAnimals = orderedAnimals.Skip(offset).Take(limit);
+
+        IEnumerable<string> animalNames = selectedAnimals.Select(x => x.Name).ToList();
+        
+        return animalNames.ToList();
+    }
+
+
 
     [HttpGet(nameof(GetAnimalNamesPerAgeOrderedByAge))]
     public Dictionary<int, IEnumerable<string>> GetAnimalNamesPerAgeOrderedByAge()
     {
-        var animalsGroupedByAge = GetAllAnimals().GroupBy(x => x.Age).OrderBy(grouping => grouping.Key);
+        IOrderedEnumerable<IGrouping<int, IAnimal>> animalsGroupedByAge = GetAllAnimals().GroupBy(x => x.Age).OrderBy(grouping => grouping.Key);
 
         var result = animalsGroupedByAge.ToDictionary(group => group.Key, group => group.Select(animal => animal.Name));
 
