@@ -1,5 +1,6 @@
-﻿using System;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using System.Data;
+using Zookeeper.Tools;
 
 namespace Zookeeper.Controllers;
 
@@ -7,9 +8,15 @@ namespace Zookeeper.Controllers;
 [Route("[controller]")]
 public class NewsletterController
 {
+    private readonly IEmailService _emailService;
+    public NewsletterController(IEmailService emailService)
+    {
+        _emailService = emailService;
+    }
+
     [HttpGet(nameof(Subscribe))]
     public void Subscribe(string emailAddress)
     {
-        throw new NotImplementedException();
+        _emailService.SendMail(emailAddress);
     }
 }

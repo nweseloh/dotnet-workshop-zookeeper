@@ -23,4 +23,8 @@
     <ProjectReference Include="..\Zookeeper\Zookeeper.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Controllers\" />
+  </ItemGroup>
+
 </Project>

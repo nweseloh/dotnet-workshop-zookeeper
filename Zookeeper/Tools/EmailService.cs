@@ -1,17 +1,29 @@
-﻿using System.Net.Mail;
+﻿using System.Data;
+using System.Net.Mail;
 
 namespace Zookeeper.Tools;
 
-public class EmailService
+public class EmailService : IEmailService
 {
-    public static void SendMail(string recipient)
+    public void SendMail(string recipient)
     {
-        SmtpClient smtpClient = new SmtpClient("127.0.0.1", 125);
-        smtpClient.Send("marketing@zoo.com", recipient, "Visit our zoo!", "We have lots of animals." );
+        SmtpClient smtpClient = CreateSmtpClient();
+        smtpClient.Send("marketing@zoo.com", recipient, 
+            "Visit our zoo!", "We have lots of animals." );
+    }
+
+    private static SmtpClient CreateSmtpClient()
+    {
+        return new SmtpClient("127.0.0.1", 125);
     }
 
     public static bool IsValidEmailAddress(string emailAddress)
     {
         return emailAddress.Contains("@");
     }
+}
+
+public interface IEmailService
+{
+    void SendMail(string recipient);
 }
