@@ -1,43 +1,37 @@
-﻿using System;
-using System.Net.Mail;
+﻿using System.Net.Mail;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using Zookeeper.Exceptions;
 using Zookeeper.Tools;
 
-namespace Zookeeper.Controllers;
-
-[ApiController]
-[Route("[controller]")]
-public class NewsletterController
+namespace Zookeeper.Controllers
 {
-    private readonly IEmailService _emailService;
-    private readonly IMyLogger _logger;
-
-    public NewsletterController(IEmailService emailService, IMyLogger  logger)
+    [ApiController]
+    [Route("[controller]")]
+    public class NewsletterController
     {
-        _emailService = emailService;
-        _logger = logger;
-    }
+        private readonly IEmailService _emailService;
+        private readonly IMyLogger _logger;
 
-    [HttpGet(nameof(Subscribe))]
-    public void Subscribe(string emailAddress)
-    {
-        if (!_emailService.IsValidEmailAddress(emailAddress))
-            throw new InvalidEmailException();
-
-        try
+        public NewsletterController(IEmailService emailService, IMyLogger  logger)
         {
-            _emailService.SendMail(emailAddress);
+            _emailService = emailService;
+            _logger = logger;
         }
-        catch (SmtpException e)
+
+        [HttpGet(nameof(Subscribe))]
+        public void Subscribe(string emailAddress)
         {
-            _logger.Log(e, "Send mail failed");
+            if (!_emailService.IsValidEmailAddress(emailAddress))
+                throw new InvalidEmailException();
+
+            try
+            {
+                _emailService.SendMail(emailAddress);
+            }
+            catch (SmtpException e)
+            {
+                _logger.Log(e, "Send mail failed");
+            }
         }
     }
-}
-
-public interface IMyLogger
-{
-    void Log(Exception smtpException, string message);
 }

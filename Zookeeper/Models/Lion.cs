@@ -1,5 +1,6 @@
 ﻿
 using System;
+using System.Timers;
 using Zookeeper.Enums;
 
 namespace Zookeeper.Models;
@@ -8,6 +9,21 @@ public class Lion : IAnimal
 {
     private int _age;
     private bool _isHungry;
+    private readonly Timer _timer;
+
+    public Lion()
+    {
+        _timer = new Timer();
+        _timer.Interval = TimeSpan.FromHours(1).Milliseconds; 
+        _timer.Elapsed += TimerOnElapsed;
+        _timer.Start();
+        
+    }
+
+    private void TimerOnElapsed(object? sender, ElapsedEventArgs e)
+    {
+        _isHungry = true;
+    }
 
     public int Age
     {
@@ -39,6 +55,6 @@ public class Lion : IAnimal
 
     public void Feed()
     {
-        // do nothing
+        _isHungry = false;
     }
 }

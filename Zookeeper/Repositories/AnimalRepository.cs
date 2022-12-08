@@ -3,9 +3,9 @@ using Zookeeper.Models;
 
 namespace Zookeeper.Repositories;
 
-public class AnimalRepository
+public class AnimalRepository : IAnimalRepository
 {
-    public static IEnumerable<IAnimal> GetAllAnimals()
+    public IEnumerable<IAnimal> GetAllAnimals()
     {
         // TODO:  query database
         return new List<IAnimal>

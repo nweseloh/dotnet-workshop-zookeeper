@@ -12,11 +12,12 @@ namespace Zookeeper.Controllers;
 [Route("[controller]")]
 public class AnimalsController : ControllerBase
 {
-    private static IEnumerable<IAnimal> GetAllAnimals()
-    {
-        return AnimalRepository.GetAllAnimals();
-    }
+    private readonly IAnimalRepository _animalRepository;
 
+    public AnimalsController(IAnimalRepository animalRepository)
+    {
+        _animalRepository = animalRepository;
+    }
 
     [HttpGet(nameof(GetOldestAnimal))]
     public IAnimal? GetOldestAnimal()
@@ -64,7 +65,7 @@ public class AnimalsController : ControllerBase
         return animalNames;
     }
 
-    private static List<string> GetAnimalNames(int offset, int limit)
+    private List<string> GetAnimalNames(int offset, int limit)
     {
         IEnumerable<IAnimal> animals = GetAllAnimals();
 
@@ -77,8 +78,6 @@ public class AnimalsController : ControllerBase
         return animalNames.ToList();
     }
 
-
-
     [HttpGet(nameof(GetAnimalNamesPerAgeOrderedByAge))]
     public Dictionary<int, IEnumerable<string>> GetAnimalNamesPerAgeOrderedByAge()
     {
@@ -88,4 +87,10 @@ public class AnimalsController : ControllerBase
 
         return result; 
     }
+
+    private IEnumerable<IAnimal> GetAllAnimals()
+    {
+        return _animalRepository.GetAllAnimals();
+    }
+
 }

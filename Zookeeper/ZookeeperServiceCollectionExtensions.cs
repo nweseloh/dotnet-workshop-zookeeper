@@ -1,6 +1,6 @@
-﻿using System.Net.Mail;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Zookeeper.Models;
+using Zookeeper.Repositories;
 using Zookeeper.Tools;
 
 namespace Zookeeper;
@@ -9,14 +9,15 @@ public static class ZookeeperServiceCollectionExtensions
 {
     public static void AddZookeeperClasses(this IServiceCollection services)
     {
-        // Scope = HTTP Request
-        //builder.Services.AddScoped<IAnimalRepository, AnimalRepository>();
-
+        // Transient = always a new object
         services.AddTransient<IEmailService, EmailService>();
 
-        //services.AddSingleton<IAnimalCache, AnimalCache>();
-
+        // Scope = one object per HTTP Request
+        services.AddScoped<IAnimalRepository, AnimalRepository>();
         services.AddScoped<Giraffe>(c => new Giraffe { Age = 10, Name = "Dependency Injected Giraffe" });
+
+        // Singleton = one object per application
+        //services.AddSingleton<IAnimalCache, AnimalCache>();
     }
 
     public static string Reverse(this string input)
